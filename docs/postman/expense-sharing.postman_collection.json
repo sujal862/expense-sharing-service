@@ -1,0 +1,438 @@
+{
+  "info": {
+    "name": "Expense Sharing Service - Complete Demo",
+    "_postman_id": "4ca67a12-98ce-4a8e-8bd5-e1bbbfeec784",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Run in order using the supplied environment. Creates fresh synthetic records on each run. Money inputs are INR decimal strings. Includes equal/custom splits, late joiner, partial payment, and simplified route."
+  },
+  "item": [
+    {
+      "name": "01 Liveness",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/health"
+      }
+    },
+    {
+      "name": "02 Readiness",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/ready"
+      }
+    },
+    {
+      "name": "Create Mohit",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/users",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Mohit\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Create Rahul",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/users",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Rahul\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Create Ankit",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/users",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Ankit\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Create Priya",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/users",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Priya\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "List users",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/users?limit=20&offset=0"
+      }
+    },
+    {
+      "name": "Create Goa group",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Goa Postman Demo\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add a to Goa",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{a}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add b to Goa",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{b}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add c to Goa",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{c}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "List members",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/members"
+      }
+    },
+    {
+      "name": "Dinner split among original three members",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/expenses",
+        "body": {"mode": "raw", "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{a}},\n  \"amount\": \"1200.00\",\n  \"description\": \"Dinner\"\n}", "options": {"raw": {"language": "json"}}}
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"Three saved shares\", () => pm.expect(responseBody.splits).to.have.lengthOf(3));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Taxi paid by a different member",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/expenses",
+        "body": {"mode": "raw", "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{b}},\n  \"amount\": \"600.00\",\n  \"description\": \"Taxi\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Priya joins after dinner and taxi",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{d}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Custom subset excludes payer",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/expenses",
+        "body": {"mode": "raw", "raw": "{\n  \"group_id\": {{group_id}},\n  \"paid_by\": {{c}},\n  \"amount\": \"300.00\",\n  \"description\": \"Activities\",\n  \"split_type\": \"custom\",\n  \"splits\": [\n    {\n      \"user_id\": {{b}},\n      \"amount\": \"100.00\"\n    },\n    {\n      \"user_id\": {{d}},\n      \"amount\": \"200.00\"\n    }\n  ]\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "History preserves original participants",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/expenses"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  const dinner = responseBody.items.find(e => e.id === Number(pm.environment.get(\"dinner_id\")));",
+              "  pm.test(\"New member did not inherit dinner\", () => {",
+              "    pm.expect(dinner.splits).to.have.lengthOf(3);",
+              "    pm.expect(dinner.splits.map(s => s.user_id)).not.to.include(Number(pm.environment.get(\"d\")));",
+              "  });",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Balances before partial payment",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/balances"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"Mohit should receive 600\", () => pm.expect(responseBody.members.find(m => m.user_id === Number(pm.environment.get(\"a\"))).net_amount).to.eql(\"600.00\"));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Smart suggestions before partial payment",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/settlement-suggestions"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"Three suggestions\", () => pm.expect(responseBody.payment_count).to.eql(3));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record partial real-world payment",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/settlements",
+        "body": {"mode": "raw", "raw": "{\n  \"paid_by\": {{c}},\n  \"paid_to\": {{a}},\n  \"amount\": \"150.00\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Updated balances",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/balances"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"Ankit still owes 150\", () => pm.expect(responseBody.members.find(m => m.user_id === Number(pm.environment.get(\"c\"))).net_amount).to.eql(\"-150.00\"));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Updated suggestions",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/settlement-suggestions"
+      }
+    },
+    {
+      "name": "Payment history",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/settlements"
+      }
+    },
+    {
+      "name": "Excess payment rejected",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{group_id}}/settlements",
+        "body": {"mode": "raw", "raw": "{\n  \"paid_by\": {{c}},\n  \"paid_to\": {{a}},\n  \"amount\": \"151.00\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Create chain group",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups",
+        "body": {"mode": "raw", "raw": "{\n  \"name\": \"Postman Simplified Route\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add a to chain",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{a}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add b to chain",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{b}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Add c to chain",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/members",
+        "body": {"mode": "raw", "raw": "{\n  \"user_id\": {{c}}\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "a owes b",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/expenses",
+        "body": {"mode": "raw", "raw": "{\n  \"group_id\": {{chain_id}},\n  \"paid_by\": {{b}},\n  \"amount\": \"500.00\",\n  \"description\": \"Paid on behalf of another member\",\n  \"split_type\": \"custom\",\n  \"splits\": [\n    {\n      \"user_id\": {{a}},\n      \"amount\": \"500.00\"\n    }\n  ]\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "b owes c",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/expenses",
+        "body": {"mode": "raw", "raw": "{\n  \"group_id\": {{chain_id}},\n  \"paid_by\": {{c}},\n  \"amount\": \"500.00\",\n  \"description\": \"Paid on behalf of another member\",\n  \"split_type\": \"custom\",\n  \"splits\": [\n    {\n      \"user_id\": {{b}},\n      \"amount\": \"500.00\"\n    }\n  ]\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "Chain collapses to one suggestion",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/settlement-suggestions"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"One simplified payment\", () => {",
+              "    pm.expect(responseBody.payment_count).to.eql(1);",
+              "    pm.expect(responseBody.transfers[0].debtor.user_id).to.eql(Number(pm.environment.get(\"a\")));",
+              "    pm.expect(responseBody.transfers[0].creditor.user_id).to.eql(Number(pm.environment.get(\"c\")));",
+              "  });",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record payment along simplified route",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/settlements",
+        "body": {"mode": "raw", "raw": "{\n  \"paid_by\": {{a}},\n  \"paid_to\": {{c}},\n  \"amount\": \"500.00\"\n}", "options": {"raw": {"language": "json"}}}
+      }
+    },
+    {
+      "name": "All net balances zero; historical cycle remains",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/balances"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"Everyone settled\", () => pm.expect(responseBody.members.every(m => m.net_amount === \"0.00\")).to.be.true);",
+              "  pm.test(\"Historical cycle is preserved\", () => pm.expect(responseBody.pairwise).to.have.lengthOf(3));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settled group has no suggestions",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/groups/{{chain_id}}/settlement-suggestions"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function () {",
+              "  const responseBody = pm.response.json();",
+              "  pm.test(\"No suggestions remain\", () => pm.expect(responseBody.transfers).to.eql([]));",
+              "})();"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "(function () {",
+          "  const expectedStatus = pm.info.requestName === \"Excess payment rejected\"",
+          "    ? 409 : (pm.request.method === \"POST\" ? 201 : 200);",
+          "  pm.test(\"Expected HTTP status\", () => pm.response.to.have.status(expectedStatus));",
+          "",
+          "  // Save generated IDs for later requests in the demo.",
+          "  const idVariables = {",
+          "    \"Create Mohit\": \"a\", \"Create Rahul\": \"b\",",
+          "    \"Create Ankit\": \"c\", \"Create Priya\": \"d\",",
+          "    \"Create Goa group\": \"group_id\", \"Create chain group\": \"chain_id\",",
+          "    \"Dinner split among original three members\": \"dinner_id\"",
+          "  };",
+          "  const variable = idVariables[pm.info.requestName];",
+          "  if (variable && pm.response.code === 201) {",
+          "    pm.environment.set(variable, pm.response.json().id);",
+          "  }",
+          "})();"
+        ]
+      }
+    }
+  ]
+}

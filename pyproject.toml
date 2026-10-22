@@ -1,0 +1,19 @@
+[project]
+name = "expense-sharing-service"
+version = "1.0.0"
+description = "Group expenses, balances, and advisory settlement plans"
+requires-python = ">=3.11,<3.14"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["integration: requires an explicitly configured isolated MySQL database"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

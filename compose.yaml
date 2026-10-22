@@ -1,0 +1,56 @@
+name: expense-sharing
+services:
+  db:
+    image: mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-expense_sharing}
+      MYSQL_USER: ${MYSQL_USER:-expense}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-expense_demo}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_demo}
+    command: ["--default-time-zone=+00:00"]
+    ports:
+      - "127.0.0.1:${MYSQL_PORT:-3308}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u$$MYSQL_USER $$MYSQL_DATABASE -e 'SELECT 1' >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+  api:
+    build: .
+    environment:
+      DATABASE_URL: mysql+asyncmy://${MYSQL_USER:-expense}:${MYSQL_PASSWORD:-expense_demo}@db:3306/${MYSQL_DATABASE:-expense_sharing}
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+  test-db:
+    image: mysql:8.4.8@sha256:2952e3be7807f06fc18de50b3ea1a632d5c70d63482ff7d7376fe3aa8999babf
+    profiles: ["test"]
+    environment:
+      MYSQL_DATABASE: expense_sharing_test
+      MYSQL_USER: expense_test
+      MYSQL_PASSWORD: test_demo
+      MYSQL_ROOT_PASSWORD: test_root_demo
+    command: ["--default-time-zone=+00:00"]
+    ports:
+      - "127.0.0.1:3307:3306"
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u$$MYSQL_USER $$MYSQL_DATABASE -e 'SELECT 1' >/dev/null 2>&1"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 30s
+volumes:
+  mysql_data:

@@ -1,0 +1,290 @@
+{
+  "users": {
+    "Mohit": 1,
+    "Rahul": 2,
+    "Ankit": 3,
+    "Priya": 4
+  },
+  "trip_group_id": 1,
+  "chain_group_id": 2,
+  "trip_balances_before_partial_payment": {
+    "group_id": 1,
+    "currency": "INR",
+    "pairwise": [
+      {
+        "debtor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "200.00"
+      },
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "400.00"
+      },
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "amount": "100.00"
+      },
+      {
+        "debtor": {
+          "user_id": 4,
+          "name": "Priya"
+        },
+        "creditor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "amount": "200.00"
+      }
+    ],
+    "members": [
+      {
+        "user_id": 1,
+        "name": "Mohit",
+        "net_amount": "600.00",
+        "status": "should_receive"
+      },
+      {
+        "user_id": 2,
+        "name": "Rahul",
+        "net_amount": "-100.00",
+        "status": "should_pay"
+      },
+      {
+        "user_id": 3,
+        "name": "Ankit",
+        "net_amount": "-300.00",
+        "status": "should_pay"
+      },
+      {
+        "user_id": 4,
+        "name": "Priya",
+        "net_amount": "-200.00",
+        "status": "should_pay"
+      }
+    ]
+  },
+  "trip_suggestions_before_payment": {
+    "group_id": 1,
+    "currency": "INR",
+    "transfers": [
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "300.00"
+      },
+      {
+        "debtor": {
+          "user_id": 4,
+          "name": "Priya"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "200.00"
+      },
+      {
+        "debtor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "100.00"
+      }
+    ],
+    "payment_count": 3,
+    "explanation": "Advisory plan matching the largest debtor and creditor, with user-ID tie-breaking. Preserves net positions and may change who pays whom. Does not guarantee the minimum number of payments. No payments have been recorded or executed."
+  },
+  "recorded_partial_payment": {
+    "created_at": "2026-10-22T13:41:13.351011Z",
+    "id": 1,
+    "group_id": 1,
+    "paid_by": 3,
+    "paid_to": 1,
+    "amount": "150.00",
+    "currency": "INR"
+  },
+  "trip_balances_after_partial_payment": {
+    "group_id": 1,
+    "currency": "INR",
+    "pairwise": [
+      {
+        "debtor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "200.00"
+      },
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "250.00"
+      },
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "amount": "100.00"
+      },
+      {
+        "debtor": {
+          "user_id": 4,
+          "name": "Priya"
+        },
+        "creditor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "amount": "200.00"
+      }
+    ],
+    "members": [
+      {
+        "user_id": 1,
+        "name": "Mohit",
+        "net_amount": "450.00",
+        "status": "should_receive"
+      },
+      {
+        "user_id": 2,
+        "name": "Rahul",
+        "net_amount": "-100.00",
+        "status": "should_pay"
+      },
+      {
+        "user_id": 3,
+        "name": "Ankit",
+        "net_amount": "-150.00",
+        "status": "should_pay"
+      },
+      {
+        "user_id": 4,
+        "name": "Priya",
+        "net_amount": "-200.00",
+        "status": "should_pay"
+      }
+    ]
+  },
+  "chain_simplified_suggestion_before_full_payment": {
+    "group_id": 2,
+    "currency": "INR",
+    "transfers": [
+      {
+        "debtor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "creditor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "amount": "500.00"
+      }
+    ],
+    "payment_count": 1,
+    "explanation": "Advisory plan matching the largest debtor and creditor, with user-ID tie-breaking. Preserves net positions and may change who pays whom. Does not guarantee the minimum number of payments. No payments have been recorded or executed."
+  },
+  "chain_balances_after_full_payment": {
+    "group_id": 2,
+    "currency": "INR",
+    "pairwise": [
+      {
+        "debtor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "creditor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "amount": "500.00"
+      },
+      {
+        "debtor": {
+          "user_id": 2,
+          "name": "Rahul"
+        },
+        "creditor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "amount": "500.00"
+      },
+      {
+        "debtor": {
+          "user_id": 3,
+          "name": "Ankit"
+        },
+        "creditor": {
+          "user_id": 1,
+          "name": "Mohit"
+        },
+        "amount": "500.00"
+      }
+    ],
+    "members": [
+      {
+        "user_id": 1,
+        "name": "Mohit",
+        "net_amount": "0.00",
+        "status": "settled"
+      },
+      {
+        "user_id": 2,
+        "name": "Rahul",
+        "net_amount": "0.00",
+        "status": "settled"
+      },
+      {
+        "user_id": 3,
+        "name": "Ankit",
+        "net_amount": "0.00",
+        "status": "settled"
+      }
+    ]
+  }
+}
